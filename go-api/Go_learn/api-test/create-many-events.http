@@ -1,0 +1,24 @@
+POST http://localhost:8090/events/many
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjRxS3VHQGV4YW1wbGUuY29tIiwiZXhwIjoxNzIzNjMwNzE4LCJ1c2VySWQiOjB9.5ZZYoqObb0ffRKNLYbLMOkJFOaxEjvvr42D09p5cbBk
+
+{
+    "event1": {
+        "name": "Test event",
+        "description": "A test event",
+        "location": "A test location",
+        "datetime": "2025-01-01T15:30:00.000Z"
+    },
+    "event2": {
+        "name": "Test event",
+        "description": "A test event",
+        "location": "A test location",
+        "datetime": "2025-01-01T15:30:00.000Z"
+    },
+    "event3": {
+        "name": "Test event",
+        "description": "A test event",
+        "location": "A test location",
+        "datetime": "2025-01-01T15:30:00.000Z"
+    }
+}

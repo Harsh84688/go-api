@@ -1,0 +1,10 @@
+POST http://localhost:8090/events
+content-type: application/json
+//authorization: token
+
+{
+    "name": "Test event",
+    "description": "A test event",
+    "location": "A test location",
+    "datetime": "2025-01-01T15:30:00.000Z"
+}
