@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Manager - Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 10px; margin: 5px; background-color: #007bff; color: white; border: none; border-radius: 5px; }
+        .results { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Book Manager - Dashboard</h1>
+        <button onclick="getBooks()">Get Books</button>
+        <button onclick="getBookById()">Get Book by ID</button>
+        <button onclick="createBook()">Create Book</button>
+        <button onclick="createManyBooks()">Create Many Books</button>
+        <button onclick="deleteBook()">Delete Book</button>
+        <button onclick="updateBook()">Update Book</button>
+        <div class="results" id="results"></div>
+    </div>
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        async function getBooks() {
+            const response = await fetch(`${API_URL}/events`, {
+                method: 'GET',
+            });
+            const data = await response.json();
+            displayResults(data);
+        }
+
+        async function getBookById() {
+            const id = prompt('Enter book ID:');
+            const response = await fetch(`${API_URL}/events/${id}`);
+            const data = await response.json();
+            displayResults(data );
+        }
+
+        async function createBook() {
+            const name = prompt('Enter book title:');
+            const author = prompt('Enter book author:');
+            const description = prompt('Enter book description:');
+            const response = await fetch(`${API_URL}/events`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, author , description})
+            });
+            const data = await response.json();
+            displayResults(data );
+        }
+
+        async function createManyBooks() {
+            const count = parseInt(prompt('Enter number of books to create:'), 10);
+            if (isNaN(count) || count <= 0) {
+                alert('Invalid number. Please enter a positive integer.');
+                return;
+            }
+
+            const books = {};
+            for (let i = 1; i <= count; i++) {
+                const name = prompt(`Enter name for book ${i}:`);
+                const author = prompt(`Enter author for book ${i}:`);
+                const description = prompt(`Enter description for book ${i}:`);
+                
+                books[`book${i}`] = { name, author, description };
+            }
+            const response = await fetch(`${API_URL}/events/many`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(books)
+                });
+                const data = await response.json();
+                displayResults(data );
+        }
+
+        async function deleteBook() {
+            const id = prompt('Enter book ID to delete:');
+            const response = await fetch(`${API_URL}/events/${id}`, { method: 'DELETE' });
+            const data = await response.json();
+            displayResults(data);
+        }
+
+        async function updateBook() {
+            const id = prompt('Enter book ID to update:');
+            const name = prompt('Enter new book title:');
+            const author = prompt('Enter new book author:');
+            const description = prompt('Enter new book description:');
+            const response = await fetch(`${API_URL}/events/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, author , description })
+            });
+            const data = await response.json();
+            displayResults(data);
+        }
+
+        function displayResults(data) {
+            alert( JSON.stringify(data) );
+        }
+    </script>
+</body>
+</html>

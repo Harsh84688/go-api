@@ -117,7 +117,7 @@ func deleteEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"message": "book deleted"})
 }
 
-func createManyHelper(context *gin.Context, event *models.Event, eventNum string, errorChannel chan string) {
+func createManyHelper(context *gin.Context, event *models.Event, eventNum string, errorChannel chan string, events *map[string]models.Event) {
 
 	event.UserId = context.GetInt64("userId")
 
@@ -128,6 +128,8 @@ func createManyHelper(context *gin.Context, event *models.Event, eventNum string
 		errorChannel <- eventNum
 		return
 	}
+	delete(*events, eventNum)
+	(*events)[eventNum] = *event
 
 	errorChannel <- ""
 }
@@ -145,7 +147,7 @@ func createManyEvents(context *gin.Context) {
 	var errorChannel = make(chan string, len(events))
 
 	for eventNum, event := range events {
-		go createManyHelper(context, &event, eventNum, errorChannel)
+		go createManyHelper(context, &event, eventNum, errorChannel, &events)
 	}
 
 	var codes []string
@@ -161,5 +163,6 @@ func createManyEvents(context *gin.Context) {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not create these books", "bookNums": codes})
 		return
 	}
+	log.Println(events)
 	context.JSON(http.StatusCreated, gin.H{"message": "books created", "books": events})
 }
