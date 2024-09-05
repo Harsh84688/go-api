@@ -9,9 +9,15 @@ import (
 )
 
 func Auth(context *gin.Context) {
-	token := context.Request.Header.Get("Authorization")
-	if token == "" {
-		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+	// token := context.Request.Header.Get("Authorization")
+	// if token == "" {
+	// 	context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+	// 	return
+	// }
+
+	token, err := context.Cookie("token")
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "missing token"})
 		return
 	}
 

@@ -53,5 +53,6 @@ func login(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"message": token})
+	context.SetCookie("token", token, 7200, "/", "localhost", false, true)
+	context.JSON(http.StatusOK, gin.H{"message": "authorization cookie set for 2 hours"})
 }
